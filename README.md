@@ -15,7 +15,7 @@ The goal is to augment local LLM capabilities by integrating external knowledge 
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/RAG-AI.git
+   git clone https://github.com/your-username/RAG-LLM.git
    ```
 2. Create virtual environment:
    ```bash

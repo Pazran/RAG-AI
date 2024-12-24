@@ -1,4 +1,4 @@
-# RAG-AI (WIP)
+# RAG-LLM (WIP)
 
 RAG-AI is a local application that leverages **Retrieval-Augmented Generation (RAG)** techniques with a locally hosted Language Model (LLM) like `llamacpp` or `kobold`, all written in Python.
 

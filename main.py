@@ -1,5 +1,18 @@
+import logging
 import requests
 import json
+
+# Basic logging configuration
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),  # Console output
+        logging.FileHandler('app.log', mode='a')  # Log to file
+    ]
+)
+
+logger = logging.getLogger()
 
 url_generate_sse = "http://localhost:5001/api/extra/generate/stream"
 
@@ -10,6 +23,7 @@ headers = {
 
 def generate_sse(prompt: str, temp: float = 0.7, top_p: float = 0.9):
     try:
+        logger.info("Starting SSE request.")
         response = requests.post(
             url=url_generate_sse,
             headers=headers,
@@ -19,12 +33,13 @@ def generate_sse(prompt: str, temp: float = 0.7, top_p: float = 0.9):
                 "top_p": top_p
             },
             stream=True,
-            timeout=60  # Adjust timeout if necessary
+            timeout=60
         )
-        response.raise_for_status()  # Will raise HTTPError if status is not 2xx
+        response.raise_for_status()  # Log if response has an error status
+        logger.info("SSE request successful. Streaming data...")
         return response
     except requests.exceptions.RequestException as e:
-        print(f"Request failed: {e}")
+        logger.error("Request failed: %s", e)
         return None
 
 def process_stream(response):
@@ -39,25 +54,31 @@ def process_stream(response):
                             data = json.loads(event_data)  # Parse the JSON data
                             token = data.get("token", "")
                             if token:
-                                yield token  # Yield token instead of printing
+                                logger.debug("Token received: %s", token)  # Log token
+                                yield token
                 except json.JSONDecodeError as e:
-                    print(f"Error decoding JSON: {e}")
+                    logger.warning("Error decoding JSON: %s", e)
                 except Exception as e:
-                    print(f"Error processing line: {e}")
+                    logger.error("Error processing line: %s", e)
     except Exception as e:
-        print(f"Error in processing stream: {e}")
+        logger.critical("Critical error in processing stream: %s", e)
 
-# Get user input and start generating the SSE stream
-user_input = input(">>> ")
-print()
+# Main execution
+if __name__ == "__main__":
+    prompt = input(">>> ")
+    logger.info("User input received.")
+    logger.debug("Prompt: %s", prompt)
+    
+    response = generate_sse(prompt)
 
-response = generate_sse(user_input)
-
-if response:
-    try:
-        for token in process_stream(response):
-            print(token, end='', flush=True)  # Print token without a newline
-    except Exception as e:
-        print(f"Error in streaming: {e}")
-else:
-    print("Failed to start streaming.")
+    if response and response.status_code == 200:
+        logger.info("Starting to process the stream.")
+        try:
+            for token in process_stream(response):
+                print(token, end='', flush=True)  # Print tokens without newlines
+        except requests.exceptions.RequestException as e:
+            logger.error("Request error during streaming: %s", e)
+        finally:
+            logger.info("Finished processing the stream.")
+    else:
+        logger.error("Failed to start streaming or invalid response status.")

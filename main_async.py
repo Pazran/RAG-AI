@@ -50,9 +50,10 @@ async def fetch_info(url: str, endpoint: str):
                     result = await response.json()
                     return result
                 else:
-                    logger.error(f"Failed to fetch info from {full_url}: {response.status} - {response.reason}")
+                    logger.error("Failed to fetch info from %s: %s - %s", full_url, response.status, response.reason)
+
     except Exception as e:
-        logger.error(f"Error fetching info from {full_url}: {e}")
+        logger.error("Error fetching info from %s: %s", full_url, e)
     return None
 
 # Asynchronous function to generate and process SSE with retries
@@ -68,7 +69,7 @@ async def generate_sse(url: str, prompt: str, temp: float = 0.7, top_p: float = 
         delay = min(2 ** attempt, MAX_DELAY)
         attempt += 1
         try:
-            logger.info(f"Starting SSE request (Attempt {attempt}/{retries}).")
+            logger.info(f"Starting SSE request (Attempt %s/%s).", attempt, retries)
             async with aiohttp.ClientSession(timeout=timeout) as session:
                 async with session.post(
                     url=url,
@@ -80,7 +81,7 @@ async def generate_sse(url: str, prompt: str, temp: float = 0.7, top_p: float = 
                     }
                 ) as response:
                     if response.status != 200:
-                        logger.error(f"Failed to connect: {response.status} - {response.reason}")
+                        logger.error("Failed to connect: %s - %s", response.status, response.reason)
                         raise aiohttp.ClientResponseError(
                             status=response.status,
                             message=f"Server returned {response.status}"
@@ -107,14 +108,14 @@ async def generate_sse(url: str, prompt: str, temp: float = 0.7, top_p: float = 
                                 logger.warning("Error processing line: %s", e)
             return
         except aiohttp.ClientResponseError as e:
-            logger.error(f"Request failed with status {e.status}: {e.message}")
+            logger.error("Request failed with status %s: %s", e.status, e.message)
         except aiohttp.ClientError as e:
-            logger.error(f"Request failed: {e}")
+            logger.error("Request failed: %s", e)
         except Exception as e:
-            logger.error(f"Unexpected error during SSE streaming: {e}")
+            logger.error("Unexpected error during SSE streaming: %s", e)
 
         if attempt < retries:
-            logger.info(f"Retrying in {delay} seconds...")
+            logger.info("Retrying in %s seconds...", delay)
             await asyncio.sleep(delay)
         else:
             logger.error("All retries failed. Aborting SSE request.")

@@ -27,11 +27,59 @@ The goal is to augment local LLM capabilities by integrating external knowledge 
    pip install -r requirements.txt
    ```
 
-## Usage
+## Arguments:
+
+- `--url <URL>`
+  - **Description**: The server URL for the SSE (Server-Sent Events) endpoint.
+  - **Default**: `http://localhost:5001/api/extra/generate/stream`
+  
+- `--verbose`
+  - **Description**: Enable verbose logging for detailed information during execution.
+  - **Default**: Disabled (shows only info level logs)
+  
+- `--timeout <SECONDS>`
+  - **Description**: The timeout duration for the request, in seconds.
+  - **Default**: `60` seconds
+
+- `--check-version`
+  - **Description**: Check and print the API version from the server.
+  - **Example**: If specified, the program will fetch and print the server's API version and then exit without further processing.
+
+- `--check-model`
+  - **Description**: Check and print the LLM (Language Model) used by the server.
+  - **Example**: If specified, the program will fetch and print the model information and then exit without further processing.
+
+## Example Usage:
+
 Run the application locally:
 ```bash
 python main.py
 ```
+
+1. **Check API version**:
+   ```bash
+   python main.py --check-version
+   ```
+
+2. **Check LLM model**:
+   ```bash
+   python main.py --check-model
+   ```
+
+3. **Generate Stream Data with Custom URL and Timeout**:
+   ```bash
+   python main.py --url http://yourserver.com/api/extra/generate/stream --timeout 120
+   ```
+
+4. **Enable verbose logging**:
+   ```bash
+   python main.py --verbose
+   ```
+
+5. **Check API version and LLM model**:
+   ```bash
+   python main.py --check-version --check-model
+   ```
 
 ## Contributing
 Feel free to open issues or submit pull requests to improve the project.

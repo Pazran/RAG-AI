@@ -57,7 +57,7 @@ async def fetch_info(url: str, endpoint: str):
     return None
 
 # Asynchronous function to generate and process SSE with retries
-async def generate_sse(url: str, prompt: str, temp: float = 0.7, top_p: float = 0.9, retries: int = 3, delay: float = 2.0):
+async def generate_sse(url: str, prompt: str, temp: float = 0.5, top_p: float = 0.9, retries: int = 3, delay: float = 2.0):
     """
     Connects to the SSE endpoint and processes the stream for a given prompt with retry logic.
     """

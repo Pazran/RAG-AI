@@ -1,17 +1,15 @@
 # RAG-LLM (WIP)
 
-RAG-LLM is a local application that leverages **Retrieval-Augmented Generation (RAG)** techniques with a locally hosted Language Model (LLM) like [llamacpp](https://github.com/ggerganov/llama.cpp) or [koboldcpp](https://github.com/LostRuins/koboldcpp), all written in Python.
-
-The goal is to augment local LLM capabilities by integrating external knowledge retrieval, enhancing the assistant's ability to generate contextually relevant responses.
+SSE-LLM is a demonstration of using **ServerSent-Events** to stream response directly from a locally hosted Language Model (LLM) like [llamacpp](https://github.com/ggerganov/llama.cpp) or [koboldcpp](https://github.com/LostRuins/koboldcpp), written in Python.
 
 _Note: Currently only the basic interaction with the API endpoint for text generation. RAG not implemented yet. I feel like doing it as a web based application instead of Python._
 
-## Features
-- Locally hosted LLM support (`llamacpp`/`kobold`)
-- Retrieval-augmented generation to enhance LLM outputs
-- Designed with extensibility for hybrid or pure vector database integration
+## Demo Video
+This is an example of using the SSE API running KoboldCpp locally
+[![CLI SSE Demo](https://github.com/Pazran/RAG-LLM/blob/84e41d105acb16901f524410dd13a52d36ac43c5/demo/sse-demo.gif)](https://github.com/Pazran/RAG-LLM/blob/84e41d105acb16901f524410dd13a52d36ac43c5/demo/sse-demo.gif)
 
 ## Future Development
+- Retrieval-augmented generation to enhance LLM outputs
 - Adding a **vector database** for hybrid search and pure vector-based retrieval, improving knowledge retrieval efficiency.
 
 ## Installation

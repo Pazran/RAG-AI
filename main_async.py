@@ -37,6 +37,9 @@ headers = {
     "Content-Type": "application/json"
 }
 
+with open('prompt_template.json','r') as f:
+    payload = json.load(f)
+
 # Function to fetch version or model information
 async def fetch_info(url: str, endpoint: str):
     """
@@ -57,13 +60,14 @@ async def fetch_info(url: str, endpoint: str):
     return None
 
 # Asynchronous function to generate and process SSE with retries
-async def generate_sse(url: str, prompt: str, temp: float = 0.5, top_p: float = 0.9, retries: int = 3, delay: float = 2.0):
+async def generate_sse(url: str, prompt: str, retries: int = 3, delay: float = 2.0):
     """
     Connects to the SSE endpoint and processes the stream for a given prompt with retry logic.
     """
     timeout = aiohttp.ClientTimeout(total=args.timeout)  # Configurable timeout
     attempt = 0
     MAX_DELAY = 10  # Maximum retry delay in seconds
+    payload["prompt"] = f"[The following is an interesting chat message log between User and AI.]\n\nUser: Hi.\nAI: Hello.\nUser: {prompt}\n\nAI:"
 
     while attempt < retries:
         delay = min(2 ** attempt, MAX_DELAY)
@@ -74,11 +78,7 @@ async def generate_sse(url: str, prompt: str, temp: float = 0.5, top_p: float = 
                 async with session.post(
                     url=url,
                     headers=headers,
-                    json={
-                        "prompt": prompt,
-                        "temperature": temp,
-                        "top_p": top_p
-                    }
+                    json=payload
                 ) as response:
                     if response.status != 200:
                         logger.error("Failed to connect: %s - %s", response.status, response.reason)
@@ -91,7 +91,8 @@ async def generate_sse(url: str, prompt: str, temp: float = 0.5, top_p: float = 
                         logger.warning("Received empty content from server.")
                         break
 
-                    logger.info("SSE request successful. Streaming data...")
+                    logger.info("SSE request successful. Streaming data...\n")
+                    print("AI: ", flush=True)
                     async for line in response.content.iter_any():
                         if line:
                             try:
@@ -161,6 +162,7 @@ async def main():
                 print(token, end="", flush=True)
                 await asyncio.sleep(0.1)
             
+            print("\n\n")
             end = time.time()
             total_time = "{0:.2f}".format(end-start)
             if response:

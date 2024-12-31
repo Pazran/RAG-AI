@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 
 # Argument parser setup
 parser = argparse.ArgumentParser(description="SSE Client Application")
-parser.add_argument("--url", type=str, default="http://172.20.10.6:5001/api/extra/generate/stream",
+parser.add_argument("--url", type=str, default="http://localhost:5001/api/extra/generate/stream",
                     help="Server URL for the SSE endpoint")
 parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
 parser.add_argument("--timeout", type=int, default=60, help="Request timeout in seconds")

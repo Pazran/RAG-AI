@@ -3,6 +3,7 @@
 RAG-LLM is a local application that leverages **Retrieval-Augmented Generation (RAG)** techniques with a locally hosted Language Model (LLM) like [llamacpp](https://github.com/ggerganov/llama.cpp) or [koboldcpp](https://github.com/LostRuins/koboldcpp), all written in Python.
 
 The goal is to augment local LLM capabilities by integrating external knowledge retrieval, enhancing the assistant's ability to generate contextually relevant responses.
+_Note: Currently only the basic interaction with the api endpoint for text generation. RAG not implemented yet. I feel like doing it as a web based application instead of Python._
 
 ## Features
 - Locally hosted LLM support (`llamacpp`/`kobold`)

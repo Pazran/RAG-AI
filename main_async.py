@@ -165,8 +165,7 @@ async def main():
             total_time = "{0:.2f}".format(end-start)
             if response:
                 output = repr("".join(response))
-                print()
-                logger.info("Response(%s Seconds): %s", total_time, output)
+                logger.debug("Response(%s Seconds): %s", total_time, output)
 
         except KeyboardInterrupt:
             logger.info("Interrupted by user. Exiting application.")
